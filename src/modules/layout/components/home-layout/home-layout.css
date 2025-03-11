@@ -7,3 +7,10 @@
 .main-container.--is-open{
   margin-left: 15.625rem;
 }
+
+@media screen and (width < 768px) {
+  .main-container.--is-open{
+    margin-left: 0;
+  }
+   
+}
