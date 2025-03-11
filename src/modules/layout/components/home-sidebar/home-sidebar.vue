@@ -1,6 +1,8 @@
 <template>
-  <aside class="sidebar " :class="{ '--is-open': stateSidebar }">
+  <aside class="sidebar bg-background" :class="{ '--is-open': stateSidebar }">
     <main-section />
+    <Separator/>
+    <personal-section/>
   </aside>
 </template>
 
@@ -9,11 +11,14 @@ import { defineComponent, type PropType } from 'vue'
 import type { ILayoutView } from '../../view/layout-view.types';
 import type { ILayoutController } from '../../controller';
 import MainSection from './main-section/main-section.vue';
-
+import Separator from '@/components/ui/separator/Separator.vue';
+import PersonalSection from './personal-section/personal-section.vue';
 
 export default defineComponent({
   components: {
-    MainSection
+    MainSection,
+    Separator,
+    PersonalSection
   },
   props: {
     layoutView: {
