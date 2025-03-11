@@ -1,8 +1,7 @@
 <template>
-  <home-layout/>
-  <main class="pt-16">
-    hola mundo
-  </main>
+  <home-layout>
+    Hola mundo
+  </home-layout>
 </template>
 
 <script lang="ts">
@@ -15,6 +14,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
