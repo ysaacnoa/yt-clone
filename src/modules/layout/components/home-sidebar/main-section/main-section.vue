@@ -2,10 +2,10 @@
   <SidebarGroup>
     <SidebarGroupContent>
       <SidebarMenu>
-        <SidebarMenuItem v-for="item in items" :key="`item-${item.title}`">
+        <SidebarMenuItem v-for="item in items" class="hover:cursor-pointer" :key="`item-${item.title}`">
           <!-- TODO: change active to path  -->
           <!-- TODO: provide action on click -->
-          <SidebarMenuButton :tooltip="item.title" as-child :is-active="false" @click="() => {}">
+          <SidebarMenuButton :tooltip="item.title" as-child :is-active="false" @click="handleActions(item)">
             <div class="flex items-center gap-4">
               <component :is="item.icon" />
               <span class="text-sm"> {{ item.title }} </span>
@@ -23,27 +23,9 @@ import SidebarGroupContent from '@/components/ui/sidebar/SidebarGroupContent.vue
 import SidebarMenu from '@/components/ui/sidebar/SidebarMenu.vue'
 import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue'
 import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue'
-import { FlameIcon, HomeIcon, PlaySquareIcon } from 'lucide-vue-next'
+import { ITEMS_MAIN, type ItemSidebar } from '@/modules/layout/constants'
+import { useAuth, useClerk } from '@clerk/vue'
 import { defineComponent, ref } from 'vue'
-
-const ITEMS = [
-  {
-    title: 'Home',
-    url: '/',
-    icon: HomeIcon,
-  },
-  {
-    title: 'Subscriptions',
-    url: '/feed/subscriptions',
-    icon: PlaySquareIcon,
-    auth: true,
-  },
-  {
-    title: 'Trending',
-    url: '/feed/trending',
-    icon: FlameIcon,
-  },
-]
 
 export default defineComponent({
   components: {
@@ -54,11 +36,22 @@ export default defineComponent({
     SidebarMenuButton,
   },
   setup() {
-    const items = ref(ITEMS)
+    const items = ref(ITEMS_MAIN)
+    const clerck = useClerk();
+    const { isSignedIn } = useAuth()
     return {
       items: items.value,
+      isSignedIn,
+      clerck
     }
   },
+  methods: {
+    handleActions( item: ItemSidebar): void {
+      if(!this.isSignedIn && item.auth){
+        return this.clerck?.openSignIn()
+      }
+    }
+  }
 })
 </script>
 <style scoped></style>

@@ -1,15 +1,13 @@
 <template>
-  <home-layout>
-    Hola mundo
-  </home-layout>
+  <router-view/>
 </template>
 
 <script lang="ts">
-import HomeLayout from '@/modules/layout/components/home-layout'
 import { defineComponent } from 'vue'
+import { RouterView } from 'vue-router'
 export default defineComponent({
   components: {
-    HomeLayout
+    RouterView
   }
 })
 </script>

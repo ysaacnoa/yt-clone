@@ -3,10 +3,10 @@
     <SidebarGroupLabel>You</SidebarGroupLabel>
     <SidebarGroupContent>
       <SidebarMenu>
-        <SidebarMenuItem v-for="item in items" :key="`item-${item.title}`">
+        <SidebarMenuItem v-for="item in items" class="hover:cursor-pointer" :key="`item-${item.title}`">
           <!-- TODO: change active to path  -->
           <!-- TODO: provide action on click -->
-          <SidebarMenuButton :tooltip="item.title" as-child :is-active="false" @click="() => {}">
+          <SidebarMenuButton :tooltip="item.title" as-child :is-active="false" @click="handleActions(item)">
             <div class="flex flex-row items-center">
               <component :is="item.icon" />
               <span class="text-sm"> {{ item.title }} </span>
@@ -25,29 +25,12 @@ import SidebarGroupLabel from '@/components/ui/sidebar/SidebarGroupLabel.vue'
 import SidebarMenu from '@/components/ui/sidebar/SidebarMenu.vue'
 import SidebarMenuButton from '@/components/ui/sidebar/SidebarMenuButton.vue'
 import SidebarMenuItem from '@/components/ui/sidebar/SidebarMenuItem.vue'
+import { ITEMS_PERSONAL, type ItemSidebar } from '@/modules/layout/constants'
+import { useAuth, useClerk } from '@clerk/vue'
 import {  HistoryIcon, ListVideoIcon, ThumbsUpIcon } from 'lucide-vue-next'
 import { defineComponent, ref } from 'vue'
 
-const ITEMS = [
-  {
-    title: 'History',
-    url: '/playlists/history',
-    icon: HistoryIcon,
-    auth: true
-  },
-  {
-    title: 'Like videos',
-    url: '/playlists/liked',
-    icon: ThumbsUpIcon,
-    auth: true,
-  },
-  {
-    title: 'All playlists',
-    url: '/playlists',
-    icon: ListVideoIcon,
-    auth: true
-  },
-]
+
 
 export default defineComponent({
   components: {
@@ -62,11 +45,22 @@ export default defineComponent({
     SidebarGroupLabel
   },
   setup() {
-    const items = ref(ITEMS)
+    const items = ref(ITEMS_PERSONAL)
+    const clerck = useClerk();
+    const { isSignedIn } = useAuth()
     return {
       items: items.value,
+      clerck,
+      isSignedIn
     }
   },
+  methods: {
+    handleActions( item: ItemSidebar): void {
+      if(!this.isSignedIn && item.auth){
+        return this.clerck?.openSignIn()
+      }
+    }
+  }
 })
 </script>
 <style scoped></style>
